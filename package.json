@@ -1,0 +1,40 @@
+{
+  "name": "habimake",
+  "version": "1.0.0",
+  "description": "A simple habit tracking app.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kirontoo/habimake.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kirontoo/habimake/issues"
+  },
+  "homepage": "https://github.com/kirontoo/habimake#readme",
+  "dependencies": {
+    "@chakra-ui/react": "^1.6.10",
+    "@emotion/react": "^11.5.0",
+    "@emotion/styled": "^11.3.0",
+    "@supabase/supabase-js": "^1.24.0",
+    "framer-motion": "^4.1.17",
+    "next": "^11.1.2",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.1",
+    "@types/react": "^17.0.30",
+    "eslint": "^7.32.0",
+    "eslint-config-next": "^11.1.2",
+    "prisma": "^3.2.1",
+    "typescript": "^4.4.4"
+  }
+}
