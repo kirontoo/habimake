@@ -1,11 +1,9 @@
-import { ChakraProvider } from '@chakra-ui/react';
-function HomePage() {
+// route: '/'
+
+function Home() {
     return (
-        <ChakraProvider>
-            <h1>Habimake</h1>
-        </ChakraProvider>
+        <h1>Habimake</h1>
     )
 }
 
-export default HomePage
-
+export default Home
