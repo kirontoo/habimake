@@ -2,7 +2,7 @@ import { Box, Container } from "@chakra-ui/react"
 import Head from 'next/head';
 import SideBarWithHeader from "components/SidebarWithHeader";
 
-function Layout({ children, router}) {
+function Layout({ children }) {
     return (
         <Box as="main" pb={8}>
             <Head>
