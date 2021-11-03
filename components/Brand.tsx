@@ -1,9 +1,6 @@
 import {
-    Box,
-    Center,
     Text,
     HStack,
-    Link
 } from "@chakra-ui/react";
 import Logo from "./Logo";
 
@@ -11,7 +8,10 @@ function Brand() {
     return (
         <HStack fontSize="2xl">
             <Logo/>
-            <Text color="white"  as="strong" align="center">HABIMAKE</Text>
+            <Text 
+                color="white" 
+                as="strong" 
+                align="center">HABIMAKE</Text>
         </HStack>
     );
 }

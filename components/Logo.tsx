@@ -14,6 +14,7 @@ function Logo() {
             pl={1}
             pr={1}
             fontSize="2xl"
+            zIndex="1400"
         >
             <NextLink href="/">
                 <Link 
