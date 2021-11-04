@@ -33,11 +33,7 @@ function NavItem ({ children, href, index, ...rest }: NavItemProps) {
                 mx="4"
                 role="group"
                 cursor="pointer"
-                _hover={{
-                    color: 'cyan.400',
-                    borderBottom: "1px",
-                    borderBottomColor: "cyan.400",
-                }}
+                _hover={{ color: "cyan.400" }}
                 {...rest}>
                 <Text 
                     fontSize="lg"
