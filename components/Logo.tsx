@@ -1,10 +1,10 @@
 import {
     Box,
-    Link
+    Link,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 
-function Logo() {
+function Logo({...rest}) {
     return (
         <Box 
             border="2px" 
@@ -14,7 +14,7 @@ function Logo() {
             pl={1}
             pr={1}
             fontSize="2xl"
-            zIndex="1400"
+            {...rest}
         >
             <NextLink href="/">
                 <Link 

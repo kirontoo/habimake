@@ -7,7 +7,7 @@ import Logo from "./Logo";
 function Brand() {
     return (
         <HStack fontSize="2xl">
-            <Logo/>
+            <Logo zIndex="1400"/>
             <Text 
                 color="white" 
                 as="strong" 
