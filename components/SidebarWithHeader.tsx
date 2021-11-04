@@ -6,7 +6,7 @@ import {
     DrawerContent,
     DrawerOverlay,
     useDisclosure,
-} from '@chakra-ui/react';
+} from "@chakra-ui/react";
 
 import SidebarContent from "components/SidebarContent";
 import NavBar from "components/NavBar";
@@ -29,12 +29,17 @@ function SidebarWithHeader({
                 size="sm"
             >
                 <DrawerOverlay/>
-                <DrawerContent bg="blue.800">
+                <DrawerContent 
+                    borderLeftWidth="4px"
+                    borderLeftStyle="solid"
+                    borderLeftColor="cyan.500"
+                    bg="blue.800"
+                >
                     <SidebarContent onClose={onClose} />
                 </DrawerContent>
             </Drawer>
             <NavBar onOpen={onOpen} />
-            <Box ml={{ base: 0, md: 60 }} p="4" bg="blue.900">
+            <Box ml={{ base: 0, md: 60 }} p="4">
                 {children}
             </Box>
         </Box>
