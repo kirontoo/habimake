@@ -6,27 +6,14 @@ import {
     ButtonProps
 } from "@chakra-ui/react";
 import  { motion } from "framer-motion";
-
-import NavItem from "components/NavItem";
+import { ReactNode } from "react";
 
 interface SidebarProps extends BoxProps {
     onClose: () => void;
+    children?: ReactNode;
 }
 
-const LinkItems: Array<LinkItemProps> = [
-    { name: 'Home', href: '/'},
-    { name: 'Trending', href: 'trending' },
-    { name: 'Explore', href: 'trending'},
-    { name: 'Favourites', href: 'trending'},
-    { name: 'Settings', href: 'trending'},
-];
-
-interface LinkItemProps {
-    name: string;
-    href: string;
-}
-
-function SidebarContent ({ onClose, ...rest }: SidebarProps) {
+function SidebarContent ({ onClose, children, ...rest }: SidebarProps) {
     const MotionCloseButton = motion<ButtonProps>(CloseButton);
     return (
         <Flex
@@ -63,16 +50,7 @@ function SidebarContent ({ onClose, ...rest }: SidebarProps) {
                     }}
                     />
             </HStack>
-            {LinkItems.map((link, index) => (
-                <NavItem 
-                    key={link.name} 
-                    index={index+1}
-                    href={link.href}
-                    onClick={onClose}
-                >
-                    {link.name}
-                </NavItem>
-            ))}
+            {children}
         </Flex>
     );
 };

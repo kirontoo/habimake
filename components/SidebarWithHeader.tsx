@@ -1,7 +1,6 @@
 import React, { ReactNode } from 'react';
 import {
     Box,
-    useColorModeValue,
     Drawer,
     DrawerContent,
     DrawerOverlay,
@@ -10,6 +9,20 @@ import {
 
 import SidebarContent from "components/SidebarContent";
 import NavBar from "components/NavBar";
+import NavItem from "components/NavItem";
+
+const LinkItems: Array<LinkItemProps> = [
+    { name: "Home", href: "/"},
+    { name: "Trending", href: "trending" },
+    { name: "Explore", href: "trending"},
+    { name: "Favourites", href: "trending"},
+    { name: "Settings", href: "trending"},
+];
+
+interface LinkItemProps {
+    name: string;
+    href: string;
+}
 
 function SidebarWithHeader({
     children,
@@ -35,7 +48,18 @@ function SidebarWithHeader({
                     borderLeftColor="cyan.500"
                     bg="blue.800"
                 >
-                    <SidebarContent onClose={onClose} />
+                    <SidebarContent onClose={onClose}>
+                        {LinkItems.map((link, index) => (
+                            <NavItem 
+                                key={link.name} 
+                                index={index+1}
+                                href={link.href}
+                                onClick={onClose}
+                            >
+                                {link.name}
+                            </NavItem>
+                        ))}
+                    </SidebarContent>
                 </DrawerContent>
             </Drawer>
             <NavBar onOpen={onOpen} />
