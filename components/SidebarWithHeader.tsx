@@ -43,10 +43,10 @@ function SidebarWithHeader({
             >
                 <DrawerOverlay/>
                 <DrawerContent 
-                    borderLeftWidth="4px"
+                    borderLeftWidth="5px"
                     borderLeftStyle="solid"
-                    borderLeftColor="cyan.500"
-                    bg="blue.800"
+                    borderLeftColor="cyan"
+                    bg="navy.300"
                 >
                     <SidebarContent onClose={onClose}>
                         {LinkItems.map((link, index) => (
@@ -63,7 +63,7 @@ function SidebarWithHeader({
                 </DrawerContent>
             </Drawer>
             <NavBar onOpen={onOpen} />
-            <Box ml={{ base: 0, md: 60 }} p="4">
+            <Box>
                 {children}
             </Box>
         </Box>

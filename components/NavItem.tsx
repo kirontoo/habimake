@@ -33,11 +33,11 @@ function NavItem ({ children, href, index, ...rest }: NavItemProps) {
                 mx="4"
                 role="group"
                 cursor="pointer"
-                _hover={{ color: "cyan.400" }}
+                _hover={{ color: "cyan" }}
                 {...rest}>
                 <Text 
                     fontSize="lg"
-                    color="cyan.400"
+                    color="cyan"
                 >0{index}.</Text>
                 <Text>{children}</Text>
             </VStack>

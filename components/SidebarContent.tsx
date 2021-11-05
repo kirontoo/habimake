@@ -32,10 +32,10 @@ function SidebarContent ({ onClose, children, ...rest }: SidebarProps) {
                     _hover={{
                         borderStyle:"dashed",
                         borderWidth:"2px",
-                        borderColor:"cyan.400"
+                        borderColor:"cyan"
                     }}
                     p={1}
-                    color="cyan.400"
+                    color="cyan"
                     size="lg"
                     display={{ base: 'flex', md: 'none' }} 
                     onClick={onClose} 

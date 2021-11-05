@@ -27,11 +27,11 @@ function Navbar({onOpen, ...rest}: NavProps) {
                     size="lg"
                     aria-label="open menu"
                     variant="ghost"
-                    icon={<HamburgerIcon w={8} h={8} color="cyan.500"/>}
+                    icon={<HamburgerIcon w={8} h={8} color="cyan"/>}
                     _hover={{
                         border: "2px",
                         borderStyle: "dashed",
-                        borderColor: "cyan.400",
+                        borderColor: "cyan",
                     }}
                     whileHover={{ 
                         rotate: 180,
