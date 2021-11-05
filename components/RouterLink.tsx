@@ -8,9 +8,10 @@ interface RouterLinkProps extends LinkProps{
 }
 
 function RouterLink({ children, href, ...rest }: RouterLinkProps ) {
-   return (
+    return (
         <NextLink href={href}>
             <Link 
+                href={href}
                 as="li"
                 style={{listStyle: "none"}}
                 {...rest}>
