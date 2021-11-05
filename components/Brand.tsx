@@ -11,9 +11,10 @@ function Brand() {
             <Logo zIndex="1400"/>
             <RouterLink href="/" _hover={{ textDecoration: "none" }}>
                 <Text 
+                    fontFamily="Rubik"
                     color="white" 
                     as="strong" 
-                    align="center">HABIMAKE</Text>
+                    align="center">HabiMake</Text>
             </RouterLink>
         </HStack>
     );

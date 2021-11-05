@@ -1,31 +1,30 @@
 import {
-    Box,
+    Center,
     Link,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 
 function Logo({...rest}) {
     return (
-        <Box 
+        <Center 
             border="2px" 
-            borderColor="cyan.500" 
+            borderColor="cyan" 
             borderRadius="md"
-            h="fit-content"
-            pl={1}
-            pr={1}
-            fontSize="2xl"
+            p={1}
             {...rest}
         >
             <NextLink href="/">
                 <Link 
+                    fontSize="3xl"
+                    fontFamily="Rubik Mono One"
                     color="white" 
-                    as="strong" 
+                    lineHeight="1"
                     _hover={{ 
                         textDecoration: "none" 
                     }}
                 >HM</Link>
             </NextLink>
-        </Box>
+        </Center>
     );
 }
 
