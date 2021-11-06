@@ -67,7 +67,7 @@ function Login() {
                     <FormControl id="email">
                         <FormLabel>Email address</FormLabel>
                         <Input type="email" />
-                        <FormHelperText>We'll never share your email.</FormHelperText>
+                        <FormHelperText>We&apos;ll never share your email.</FormHelperText>
                     </FormControl>
                     <FormControl id="password">
                         <FormLabel>Password</FormLabel>
@@ -87,11 +87,10 @@ function Login() {
                                 </Button>
                             </InputRightElement>
                         </InputGroup>
-                        <FormHelperText>We'll never share your password.</FormHelperText>
+                        <FormHelperText>We&apos;ll never share your password.</FormHelperText>
                     </FormControl>
                     <Button 
                         w="70%"
-                        variant="outline"
                     >Login</Button>
                 </VStack>
             </VStack>
