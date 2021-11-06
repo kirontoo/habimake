@@ -40,11 +40,9 @@ function SidebarContent ({ onClose, children, ...rest }: SidebarProps) {
                     display={{ base: 'flex', md: 'none' }} 
                     onClick={onClose} 
                     whileHover={{ 
-                        rotate: 180,
+                        scale: 1.2,
                         transition: { 
-                            easeIn: "linear",
-                            easeOut: "linear",
-                            duration: 0.2, 
+                            duration: 0.1, 
                             delay: 0 
                         }
                     }}
