@@ -16,7 +16,7 @@ const LinkItems: Array<LinkItemProps> = [
     { name: "Trending", href: "trending" },
     { name: "Explore", href: "trending"},
     { name: "Favourites", href: "trending"},
-    { name: "Settings", href: "trending"},
+    { name: "Login", href: "login"},
 ];
 
 interface LinkItemProps {

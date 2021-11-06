@@ -34,10 +34,8 @@ function Navbar({onOpen, ...rest}: NavProps) {
                         borderColor: "cyan",
                     }}
                     whileHover={{ 
-                        rotate: 180,
+                        scale: 1.1,
                         transition: { 
-                            easeIn: "linear",
-                            easeOut: "linear",
                             duration: 0.2, 
                             delay: 0 
                         }
