@@ -4,7 +4,7 @@ import SideBarWithHeader from "components/SidebarWithHeader";
 
 function Layout({ children }) {
     return (
-        <Box as="main" pb={8}>
+        <Box as="main">
             <Head>
                 <meta name="viewport" content="width=device-width, initial-scale=1"/>
                 <title>Home | Habimake</title>
@@ -13,6 +13,7 @@ function Layout({ children }) {
                 <SideBarWithHeader>
                     {children} 
                 </SideBarWithHeader>
+                { /* TODO: footer here */}
             </Container>
         </Box>
     )
