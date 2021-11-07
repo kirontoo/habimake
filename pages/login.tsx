@@ -11,13 +11,25 @@ import {
     InputGroup,
     InputRightElement,
 } from "@chakra-ui/react";
-
+import { 
+   Formik,
+   Form,
+   Field,
+} from "formik";
 import { useState } from "react";
+import * as Yup from "yup";
 
-import { Prisma } from "@prisma/client";
-import { Formik, Form, Field } from "formik";
+ const LoginSchema: Yup.SchemaOf<{email: string, password: string}> = Yup.object().shape({
+    email: Yup.string().email('Invalid email').required('Required'),
+    password: Yup.string()
+        .required('Required')
+        .matches(
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+            "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
+        )
+ });
 
-type AuthUser = {
+type AuthUserForm = {
     email: string,
     password: string,
     username?: string,
@@ -31,12 +43,12 @@ function Login() {
         setShowPassword(!showPassword);
     };
 
-    let initialValues: AuthUser = {
+    let initialValues: AuthUserForm = {
         email: "",
         password: "",
     }
 
-    let onSubmit = (values: AuthUser, actions) => {
+    let onSubmit = (values: AuthUserForm, actions) => {
         setTimeout(() => {
             alert(JSON.stringify(values, null, 2))
             actions.setSubmitting(false)
@@ -81,6 +93,7 @@ function Login() {
                 </Center>
                 <Formik
                     initialValues={initialValues}
+                    validationSchema={LoginSchema}
                     onSubmit={onSubmit}
                 >
                     {(props) => (
@@ -90,22 +103,25 @@ function Login() {
                                 w="full"
                             >
                                 <Field name="email">
-                                    { ({ field, form }) => ( 
-                                        <FormControl isInvalid={form.errors.email && form.touched.email}>
+                                    { ({ field, meta }) => ( 
+                                        <FormControl isInvalid={meta.error && meta.touched}>
                                             <FormLabel htmlFor="email">Email address</FormLabel>
                                             <Input 
                                                 {...field}
                                                 id="email"
                                                 type="email"
                                                 />
-                                            <FormHelperText>We&apos;ll never share your email.</FormHelperText>
-                                            <FormErrorMessage>{form.errors.email}</FormErrorMessage>
+                                            {
+                                                (meta.touched && meta.error)
+                                                ? ( <FormErrorMessage color="pink">{meta.error}</FormErrorMessage> )
+                                                : ( <FormHelperText>We&apos;ll never share your email.</FormHelperText> )
+                                            }
                                         </FormControl>
                                     )}
                                 </Field>
                                 <Field name="password">
-                                    {({ field, form}) => (
-                                        <FormControl isInvalid={form.errors.password && form.touched.password}>
+                                    {({ field, meta }) => (
+                                        <FormControl isInvalid={meta.errors && meta.touched}>
                                             <FormLabel htmlFor="password">Password</FormLabel>
                                             <InputGroup size="md">
                                                 <Input
@@ -125,8 +141,11 @@ function Login() {
                                                     </Button>
                                                 </InputRightElement>
                                             </InputGroup>
-                                            <FormHelperText>We&apos;ll never share your password.</FormHelperText>
-                                            <FormErrorMessage>{form.errors.password}</FormErrorMessage>
+                                            {
+                                                (meta.touched && meta.error)
+                                                ? ( <FormErrorMessage color="pink">{meta.error}</FormErrorMessage> )
+                                                : ( <FormHelperText>We&apos;ll never share your email.</FormHelperText> )
+                                            }
                                         </FormControl>
                                     )}
                                 </Field>
