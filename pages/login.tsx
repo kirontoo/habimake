@@ -12,7 +12,17 @@ import {
     InputRightElement,
 } from "@chakra-ui/react";
 
-import { useState } from 'react';
+import { useState } from "react";
+
+import { Prisma } from "@prisma/client";
+import { Formik, Form, Field } from "formik";
+
+type AuthUser = {
+    email: string,
+    password: string,
+    username?: string,
+    verifyPassword?: string
+};
 
 function Login() {
     let [ showPassword, setShowPassword ]= useState<boolean>(false);
@@ -21,13 +31,23 @@ function Login() {
         setShowPassword(!showPassword);
     };
 
+    let initialValues: AuthUser = {
+        email: "",
+        password: "",
+    }
+
+    let onSubmit = (values: AuthUser, actions) => {
+        setTimeout(() => {
+            alert(JSON.stringify(values, null, 2))
+            actions.setSubmitting(false)
+        }, 1000)
+    };
+
     return (
         <Center 
             my="20"
-            h={{
-                lg:"50vh"
-            }}
-        >
+            h={{ lg:"50vh" }}
+            >
             <VStack
                 borderWidth={2}
                 borderColor="cyan"
@@ -36,7 +56,7 @@ function Login() {
                 w={{
                     sm: "full",
                     md: "50%",
-                    lg: "35%"
+                    lg: "40%"
                 }}
                 position="relative"
                 p={10}
@@ -59,40 +79,66 @@ function Login() {
                         fontSize="4xl"
                     >Login</Text>
                 </Center>
-                <VStack 
-                    as="form" 
-                    spacing={10}
-                    w="full"
+                <Formik
+                    initialValues={initialValues}
+                    onSubmit={onSubmit}
                 >
-                    <FormControl id="email">
-                        <FormLabel>Email address</FormLabel>
-                        <Input type="email" />
-                        <FormHelperText>We&apos;ll never share your email.</FormHelperText>
-                    </FormControl>
-                    <FormControl id="password">
-                        <FormLabel>Password</FormLabel>
-                        <InputGroup size="md">
-                            <Input
-                                    pr="4.5rem"
-                                    type={showPassword ? "text" : "password"}
-                                    placeholder="Enter password"
-                                />
-                            <InputRightElement width="4.5rem">
+                    {(props) => (
+                        <Form style={{width: "100%"}}>
+                            <VStack 
+                                spacing={10}
+                                w="full"
+                            >
+                                <Field name="email">
+                                    { ({ field, form }) => ( 
+                                        <FormControl isInvalid={form.errors.email && form.touched.email}>
+                                            <FormLabel htmlFor="email">Email address</FormLabel>
+                                            <Input 
+                                                {...field}
+                                                id="email"
+                                                type="email"
+                                                />
+                                            <FormHelperText>We&apos;ll never share your email.</FormHelperText>
+                                            <FormErrorMessage>{form.errors.email}</FormErrorMessage>
+                                        </FormControl>
+                                    )}
+                                </Field>
+                                <Field name="password">
+                                    {({ field, form}) => (
+                                        <FormControl isInvalid={form.errors.password && form.touched.password}>
+                                            <FormLabel htmlFor="password">Password</FormLabel>
+                                            <InputGroup size="md">
+                                                <Input
+                                                    {...field}
+                                                    id="password"
+                                                    pr="4.5rem"
+                                                    type={showPassword ? "text" : "password"}
+                                                    placeholder="Enter password"
+                                                    />
+                                                <InputRightElement width="4.5rem">
+                                                    <Button 
+                                                        h="1.75rem" 
+                                                        size="sm" 
+                                                        onClick={onShowPassword}
+                                                    >
+                                                        {showPassword ? "Hide" : "Show"}
+                                                    </Button>
+                                                </InputRightElement>
+                                            </InputGroup>
+                                            <FormHelperText>We&apos;ll never share your password.</FormHelperText>
+                                            <FormErrorMessage>{form.errors.password}</FormErrorMessage>
+                                        </FormControl>
+                                    )}
+                                </Field>
                                 <Button 
-                                    h="1.75rem" 
-                                    size="sm" 
-                                    onClick={onShowPassword}
-                                >
-                                    {showPassword ? "Hide" : "Show"}
-                                </Button>
-                            </InputRightElement>
-                        </InputGroup>
-                        <FormHelperText>We&apos;ll never share your password.</FormHelperText>
-                    </FormControl>
-                    <Button 
-                        w="70%"
-                    >Login</Button>
-                </VStack>
+                                    w="70%"
+                                    type="submit"
+                                    isLoading={props.isSubmitting}
+                                >Login</Button>
+                            </VStack>
+                        </Form>
+                    )}
+                </Formik>
             </VStack>
         </Center>
     )
