@@ -36,10 +36,11 @@ function NavItem ({ children, href, index, ...rest }: NavItemProps) {
                 _hover={{ color: "cyan" }}
                 {...rest}>
                 <Text 
+                    as="span"
                     fontSize="lg"
                     color="cyan"
                 >0{index}.</Text>
-                <Text>{children}</Text>
+                <Text as="span">{children}</Text>
             </VStack>
         </RouterLink>
     );
