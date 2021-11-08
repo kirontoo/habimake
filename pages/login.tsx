@@ -8,26 +8,29 @@ import {
     FormHelperText,
     Button,
     Text,
-    InputGroup,
-    InputRightElement,
 } from "@chakra-ui/react";
 import { 
-   Formik,
-   Form,
-   Field,
+    Formik,
+    Form,
+    Field,
+    FormikHelpers,
 } from "formik";
-import { useState } from "react";
 import * as Yup from "yup";
+import PasswordInput from "components/PasswordInput";
+import { supabase } from "lib/supabaseClient";
+import { useState } from "react";
 
- const LoginSchema: Yup.SchemaOf<{email: string, password: string}> = Yup.object().shape({
-    email: Yup.string().email('Invalid email').required('Required'),
+const LoginSchema: Yup.SchemaOf<{email: string, password: string}> = Yup.object().shape({
+    email: Yup.string()
+        .email('Invalid email')
+        .required('Required'),
     password: Yup.string()
         .required('Required')
         .matches(
             /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
             "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
         )
- });
+});
 
 type AuthUserForm = {
     email: string,
@@ -37,29 +40,28 @@ type AuthUserForm = {
 };
 
 function Login() {
-    let [ showPassword, setShowPassword ]= useState<boolean>(false);
-
-    function onShowPassword() {
-        setShowPassword(!showPassword);
-    };
-
     let initialValues: AuthUserForm = {
         email: "",
         password: "",
     }
 
-    let onSubmit = (values: AuthUserForm, actions) => {
-        setTimeout(() => {
-            alert(JSON.stringify(values, null, 2))
-            actions.setSubmitting(false)
-        }, 1000)
+    let onSubmit = async (values: AuthUserForm, actions: FormikHelpers<AuthUserForm> ) => {
+        try {
+            const { user, session, error } = await supabase.auth.signIn({
+                email: values.email,
+                password: values.password,
+            });
+        } catch(err) {
+            actions.setErrors({email: "Invalid email or password", password: "Invalid email or password"})
+            actions.setSubmitting(false);
+        }
     };
 
     return (
         <Center 
             my="20"
             h={{ lg:"50vh" }}
-            >
+        >
             <VStack
                 borderWidth={2}
                 borderColor="cyan"
@@ -105,7 +107,7 @@ function Login() {
                                 <Field name="email">
                                     { ({ field, meta }) => ( 
                                         <FormControl isInvalid={meta.error && meta.touched} isRequired>
-                                            <FormLabel htmlFor="email">Email address</FormLabel>
+                                            <FormLabel htmlFor="email">Email</FormLabel>
                                             <Input 
                                                 {...field}
                                                 id="email"
@@ -114,7 +116,7 @@ function Login() {
                                             {
                                                 (meta.touched && meta.error)
                                                 ? ( <FormErrorMessage color="pink">{meta.error}</FormErrorMessage> )
-                                                : ( <FormHelperText>We&apos;ll never share your email.</FormHelperText> )
+                                                : ( <FormHelperText>Please enter your email address.</FormHelperText> )
                                             }
                                         </FormControl>
                                     )}
@@ -123,28 +125,14 @@ function Login() {
                                     {({ field, meta }) => (
                                         <FormControl isInvalid={meta.error && meta.touched} isRequired>
                                             <FormLabel htmlFor="password">Password</FormLabel>
-                                            <InputGroup size="md">
-                                                <Input
-                                                    {...field}
-                                                    id="password"
-                                                    pr="4.5rem"
-                                                    type={showPassword ? "text" : "password"}
-                                                    placeholder="Enter password"
-                                                    />
-                                                <InputRightElement width="4.5rem">
-                                                    <Button 
-                                                        h="1.75rem" 
-                                                        size="sm" 
-                                                        onClick={onShowPassword}
-                                                    >
-                                                        {showPassword ? "Hide" : "Show"}
-                                                    </Button>
-                                                </InputRightElement>
-                                            </InputGroup>
+                                            <PasswordInput
+                                                id="password"
+                                                {...field}
+                                                />
                                             {
                                                 (meta.touched && meta.error)
                                                 ? ( <FormErrorMessage color="pink">{meta.error}</FormErrorMessage> )
-                                                : ( <FormHelperText>We&apos;ll never share your email.</FormHelperText> )
+                                                : ( <FormHelperText>Please enter your password</FormHelperText> )
                                             }
                                         </FormControl>
                                     )}
