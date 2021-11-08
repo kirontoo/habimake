@@ -8,6 +8,7 @@ import {
     FormHelperText,
     Button,
     Text,
+    Link,
 } from "@chakra-ui/react";
 import { 
     Formik,
@@ -17,6 +18,7 @@ import {
 } from "formik";
 import * as Yup from "yup";
 import PasswordInput from "components/PasswordInput";
+import RouterLink from "components/RouterLink";
 import { supabase } from "lib/supabaseClient";
 import { useState } from "react";
 
@@ -101,7 +103,7 @@ function Login() {
                     {(props) => (
                         <Form style={{width: "100%"}}>
                             <VStack 
-                                spacing={10}
+                                spacing={4}
                                 w="full"
                             >
                                 <Field name="email">
@@ -137,12 +139,17 @@ function Login() {
                                         </FormControl>
                                     )}
                                 </Field>
+                                <Link maxW="70%" textAlign="center">
+                                    {/* TODO: set recover password link */}
+                                    Recover your account
+                                </Link>
                                 <Button 
                                     w="70%"
                                     type="submit"
                                     isLoading={props.isSubmitting}
                                     size="lg"
                                 >Login</Button>
+                                <RouterLink href="/signup">New user? Sign up here!</RouterLink>
                             </VStack>
                         </Form>
                     )}
