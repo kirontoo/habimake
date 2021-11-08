@@ -104,7 +104,7 @@ function Login() {
                             >
                                 <Field name="email">
                                     { ({ field, meta }) => ( 
-                                        <FormControl isInvalid={meta.error && meta.touched}>
+                                        <FormControl isInvalid={meta.error && meta.touched} isRequired>
                                             <FormLabel htmlFor="email">Email address</FormLabel>
                                             <Input 
                                                 {...field}
@@ -121,7 +121,7 @@ function Login() {
                                 </Field>
                                 <Field name="password">
                                     {({ field, meta }) => (
-                                        <FormControl isInvalid={meta.errors && meta.touched}>
+                                        <FormControl isInvalid={meta.error && meta.touched} isRequired>
                                             <FormLabel htmlFor="password">Password</FormLabel>
                                             <InputGroup size="md">
                                                 <Input
@@ -153,6 +153,7 @@ function Login() {
                                     w="70%"
                                     type="submit"
                                     isLoading={props.isSubmitting}
+                                    size="lg"
                                 >Login</Button>
                             </VStack>
                         </Form>
