@@ -1,3 +1,6 @@
+/**
+* source: https://github.com/chakra-ui/chakra-ui/blob/main/packages/theme/src/components/form-error.ts
+*/
 import { formErrorAnatomy as parts } from "@chakra-ui/anatomy"
 import type {
   PartsStyleFunction,
