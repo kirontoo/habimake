@@ -72,7 +72,7 @@ function RecoverAccount() {
                                         {
                                             (meta.touched && meta.error)
                                             ? ( <FormErrorMessage color="pink">{meta.error}</FormErrorMessage> )
-                                            : ( <FormHelperText>Please enter your email address.</FormHelperText> )
+                                            : ( <FormHelperText textAlign="center">Please enter your email address.</FormHelperText> )
                                         }
                                     </FormControl>
                                 )}
