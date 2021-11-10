@@ -19,6 +19,7 @@ import {
 import * as Yup from "yup";
 import PasswordInput from "components/PasswordInput";
 import RouterLink from "components/RouterLink";
+import AuthContainer from "components/AuthContainer";
 import { supabase } from "lib/supabaseClient";
 import { useState } from "react";
 
@@ -60,102 +61,67 @@ function Login() {
     };
 
     return (
-        <Center 
-            my="20"
-            h={{ lg:"50vh" }}
-        >
-            <VStack
-                borderWidth={2}
-                borderColor="cyan"
-                borderRadius="4px"
-                h="min-content"
-                w={{
-                    sm: "full",
-                    md: "50%",
-                    lg: "40%"
-                }}
-                position="relative"
-                p={10}
-                pt={14}
+        <AuthContainer title="Login">
+            <Formik
+                initialValues={initialValues}
+                validationSchema={LoginSchema}
+                onSubmit={onSubmit}
             >
-                <Center
-                    position="absolute"
-                    top="-10"
-                    w="3xs"
-                    h="fit-content"
-                    borderWidth={2}
-                    borderColor="cyan"
-                    borderRadius="4px"
-                    bg="navy.400"
-                    p={2}
-                >
-                    <Text
-                        as="span"
-                        fontWeight="600"
-                        fontSize="4xl"
-                    >Login</Text>
-                </Center>
-                <Formik
-                    initialValues={initialValues}
-                    validationSchema={LoginSchema}
-                    onSubmit={onSubmit}
-                >
-                    {(props) => (
-                        <Form style={{width: "100%"}}>
-                            <VStack 
-                                spacing={4}
-                                w="full"
-                            >
-                                <Field name="email">
-                                    { ({ field, meta }) => ( 
-                                        <FormControl isInvalid={meta.error && meta.touched} isRequired>
-                                            <FormLabel htmlFor="email">Email</FormLabel>
-                                            <Input 
-                                                {...field}
-                                                id="email"
-                                                type="email"
-                                                />
-                                            {
-                                                (meta.touched && meta.error)
-                                                ? ( <FormErrorMessage color="pink">{meta.error}</FormErrorMessage> )
-                                                : ( <FormHelperText>Please enter your email address.</FormHelperText> )
-                                            }
-                                        </FormControl>
-                                    )}
-                                </Field>
-                                <Field name="password">
-                                    {({ field, meta }) => (
-                                        <FormControl isInvalid={meta.error && meta.touched} isRequired>
-                                            <FormLabel htmlFor="password">Password</FormLabel>
-                                            <PasswordInput
-                                                id="password"
-                                                {...field}
-                                                />
-                                            {
-                                                (meta.touched && meta.error)
-                                                ? ( <FormErrorMessage color="pink">{meta.error}</FormErrorMessage> )
-                                                : ( <FormHelperText>Please enter your password</FormHelperText> )
-                                            }
-                                        </FormControl>
-                                    )}
-                                </Field>
-                                <Link maxW="70%" textAlign="center">
-                                    {/* TODO: set recover password link */}
-                                    Recover your account
-                                </Link>
-                                <Button 
-                                    w="70%"
-                                    type="submit"
-                                    isLoading={props.isSubmitting}
-                                    size="lg"
-                                >Login</Button>
-                                <RouterLink href="/signup">New user? Sign up here!</RouterLink>
-                            </VStack>
-                        </Form>
-                    )}
-                </Formik>
-            </VStack>
-        </Center>
+                {(props) => (
+                    <Form style={{width: "100%"}}>
+                        <VStack 
+                            spacing={4}
+                            w="full"
+                        >
+                            <Field name="email">
+                                { ({ field, meta }) => ( 
+                                    <FormControl isInvalid={meta.error && meta.touched} isRequired>
+                                        <FormLabel htmlFor="email">Email</FormLabel>
+                                        <Input 
+                                            {...field}
+                                            id="email"
+                                            type="email"
+                                            />
+                                        {
+                                        (meta.touched && meta.error)
+                                        ? ( <FormErrorMessage color="pink">{meta.error}</FormErrorMessage> )
+                                        : ( <FormHelperText>Please enter your email address.</FormHelperText> )
+                                        }
+                                    </FormControl>
+                                )}
+                            </Field>
+                            <Field name="password">
+                                {({ field, meta }) => (
+                                    <FormControl isInvalid={meta.error && meta.touched} isRequired>
+                                        <FormLabel htmlFor="password">Password</FormLabel>
+                                        <PasswordInput
+                                            id="password"
+                                            {...field}
+                                            />
+                                        {
+                                        (meta.touched && meta.error)
+                                        ? ( <FormErrorMessage color="pink">{meta.error}</FormErrorMessage> )
+                                        : ( <FormHelperText>Please enter your password</FormHelperText> )
+                                        }
+                                    </FormControl>
+                                )}
+                            </Field>
+                            <Link maxW="70%" textAlign="center">
+                                {/* TODO: set recover password link */}
+                                Recover your account
+                            </Link>
+                            <Button 
+                                w="70%"
+                                type="submit"
+                                isLoading={props.isSubmitting}
+                                size="lg"
+                            >Login</Button>
+                            <RouterLink href="/signup">New user? Sign up here!</RouterLink>
+                        </VStack>
+                    </Form>
+                )}
+            </Formik>
+        </AuthContainer>
     )
 }
 
