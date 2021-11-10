@@ -1,5 +1,4 @@
 import {
-    Center,
     VStack,
     Input,
     FormControl,
@@ -7,8 +6,6 @@ import {
     FormErrorMessage,
     FormHelperText,
     Button,
-    Text,
-    Link,
 } from "@chakra-ui/react";
 import { 
     Formik,
@@ -21,19 +18,6 @@ import PasswordInput from "components/PasswordInput";
 import RouterLink from "components/RouterLink";
 import AuthContainer from "components/AuthContainer";
 import { supabase } from "lib/supabaseClient";
-import { useState } from "react";
-
-const LoginSchema: Yup.SchemaOf<{email: string, password: string}> = Yup.object().shape({
-    email: Yup.string()
-        .email('Invalid email')
-        .required('Required'),
-    password: Yup.string()
-        .required('Required')
-        .matches(
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
-            "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
-        )
-});
 
 type AuthUserForm = {
     email: string,
@@ -47,6 +31,18 @@ function Login() {
         email: "",
         password: "",
     }
+
+    const LoginSchema: Yup.SchemaOf<{email: string, password: string}> = Yup.object().shape({
+        email: Yup.string()
+            .email('Invalid email')
+            .required('Required'),
+        password: Yup.string()
+            .required('Required')
+            .matches(
+                /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+                "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
+            )
+    });
 
     let onSubmit = async (values: AuthUserForm, actions: FormikHelpers<AuthUserForm> ) => {
         try {
@@ -106,10 +102,11 @@ function Login() {
                                     </FormControl>
                                 )}
                             </Field>
-                            <Link maxW="70%" textAlign="center">
-                                {/* TODO: set recover password link */}
-                                Recover your account
-                            </Link>
+                            <RouterLink 
+                                maxW="70%" 
+                                textAlign="center"
+                                href="/recover"
+                            >Recover your account</RouterLink>
                             <Button 
                                 w="70%"
                                 type="submit"
