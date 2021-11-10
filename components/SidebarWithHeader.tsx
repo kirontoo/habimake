@@ -4,19 +4,21 @@ import {
     Drawer,
     DrawerContent,
     DrawerOverlay,
+    Button,
+    VStack,
     useDisclosure,
 } from "@chakra-ui/react";
 
 import SidebarContent from "components/SidebarContent";
 import NavBar from "components/NavBar";
 import NavItem from "components/NavItem";
+import RouterLink from "components/RouterLink";
+import { useRouter } from "next/router";
 
 const LinkItems: Array<LinkItemProps> = [
     { name: "Home", href: "/"},
-    { name: "Trending", href: "trending" },
-    { name: "Explore", href: "trending"},
-    { name: "Favourites", href: "trending"},
-    { name: "Login", href: "login"},
+    { name: "Account", href: "placeholder" },
+    { name: "My Habits", href: "placeholder"},
 ];
 
 interface LinkItemProps {
@@ -30,6 +32,7 @@ function SidebarWithHeader({
     children: ReactNode;
 }) {
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const router = useRouter();
     return (
         <Box minH="100vh">
             <Drawer
@@ -59,6 +62,27 @@ function SidebarWithHeader({
                                 {link.name}
                             </NavItem>
                         ))}
+                        <VStack 
+                            m={4}
+                            ml={8}
+                            p={8}
+                            pl={0}
+                            w="75%"
+                            borderTopWidth="2px"
+                            borderTopStyle="solid"
+                            borderTopColor="cyan.tint"
+                            alignItems="flex-start"
+                        >
+                            <Button
+                                href="login" 
+                                fontSize="2xl"
+                                size="lg"
+                                onClick={() => {
+                                    router.push("/login");
+                                    onClose();
+                                }}
+                            >Login</Button>
+                        </VStack>
                     </SidebarContent>
                 </DrawerContent>
             </Drawer>
