@@ -18,6 +18,7 @@ import PasswordInput from "components/PasswordInput";
 import RouterLink from "components/RouterLink";
 import AuthContainer from "components/AuthContainer";
 import { supabase } from "lib/supabaseClient";
+import { useRouter } from "next/router";
 
 type AuthUserForm = {
     email: string,
@@ -27,6 +28,7 @@ type AuthUserForm = {
 };
 
 function Login() {
+    const router = useRouter();
     let initialValues: AuthUserForm = {
         email: "",
         password: "",
@@ -50,6 +52,7 @@ function Login() {
                 email: values.email,
                 password: values.password,
             });
+            router.push('/');
         } catch(err) {
             actions.setErrors({email: "Invalid email or password", password: "Invalid email or password"})
             actions.setSubmitting(false);
