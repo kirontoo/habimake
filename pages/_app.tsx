@@ -7,7 +7,7 @@ import "@fontsource/rubik";
 import { ChakraProvider } from "@chakra-ui/react";
 import Layout from "components/layouts/main";
 import theme from "theme";
-import { AuthProvider } from "components/Auth";
+import { AuthProvider } from "context/Auth";
 
 function App({ Component, pageProps }) {
     return (

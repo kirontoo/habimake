@@ -18,7 +18,7 @@ import PasswordInput from "components/PasswordInput";
 import RouterLink from "components/RouterLink";
 import AuthFormContainer from "components/AuthFormContainer";
 import { useRouter } from "next/router";
-import { useAuth } from "components/Auth";
+import { useAuth } from "context/Auth";
 
 type AuthUserForm = {
     email: string,
