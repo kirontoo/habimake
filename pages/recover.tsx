@@ -14,7 +14,7 @@ import {
     FormikHelpers,
 } from "formik";
 
-import AuthContainer from "components/AuthContainer";
+import AuthFormContainer from "components/AuthFormContainer";
 import * as Yup from "yup";
 import { supabase } from "lib/supabaseClient";
 import { useRouter } from "next/router";
@@ -48,7 +48,7 @@ function RecoverAccount() {
     }
 
     return (
-        <AuthContainer title="Recover">
+        <AuthFormContainer title="Recover">
             <Formik
                 initialValues={initialValues}
                 validattionSchema={RecoverSchema}
@@ -87,7 +87,7 @@ function RecoverAccount() {
                     </Form>
                 )}
             </Formik>
-        </AuthContainer>
+        </AuthFormContainer>
     );
 }
 

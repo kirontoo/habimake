@@ -16,7 +16,7 @@ import {
 import * as Yup from "yup";
 import PasswordInput from "components/PasswordInput";
 import RouterLink from "components/RouterLink";
-import AuthContainer from "components/AuthContainer";
+import AuthFormContainer from "components/AuthFormContainer";
 import { supabase } from "lib/supabaseClient";
 import { useRouter } from "next/router";
 
@@ -60,7 +60,7 @@ function Login() {
     };
 
     return (
-        <AuthContainer title="Login">
+        <AuthFormContainer title="Login">
             <Formik
                 initialValues={initialValues}
                 validationSchema={LoginSchema}
@@ -121,7 +121,7 @@ function Login() {
                     </Form>
                 )}
             </Formik>
-        </AuthContainer>
+        </AuthFormContainer>
     )
 }
 
