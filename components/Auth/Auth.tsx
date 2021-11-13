@@ -5,9 +5,8 @@ import {
     useContext, 
     ReactNode
 } from "react";
-import { SupabaseClient, Session, User } from "@supabase/supabase-js"
+import { Session, User } from "@supabase/supabase-js"
 import { supabase } from "lib/supabaseClient";
-import { error } from "console";
 
 interface AuthSession {
     user: User | null,
@@ -30,7 +29,6 @@ interface UserCredentials {
     password: string
 }
 
-
 function useProvider(): AuthSession {
     let [user, setUser] = useState<User | null>(null);
     let [session, setSession] = useState<Session | null>(null);
@@ -38,7 +36,8 @@ function useProvider(): AuthSession {
     useEffect(() => {
         const session = supabase.auth.session()
         setSession(session)
-        setUser(session.user ?? null)
+        setUser(session.user)
+
         const { data: authListener } = supabase.auth.onAuthStateChange(
             async (_, session) => {
                 setSession(session)
@@ -49,7 +48,7 @@ function useProvider(): AuthSession {
         return () => {
             authListener?.unsubscribe()
         }
-    }, [])
+    }, []);
 
     async function signIn(u: UserCredentials) {
         const response = await supabase.auth.signIn({
@@ -60,7 +59,7 @@ function useProvider(): AuthSession {
         setSession(response.session);
 
         if ( response.error ) {
-            throw error(response.error)
+            throw response.error;
         }
     }
 
@@ -74,7 +73,7 @@ function useProvider(): AuthSession {
         setSession(response.session);
 
         if ( response.error ) {
-            throw error(response.error)
+            throw response.error;
         }
     }
 
@@ -85,7 +84,14 @@ function useProvider(): AuthSession {
 export const AuthContext = createContext(currSession);
 
 // create hook for user session
-export const useAuth = () => useContext( AuthContext );
+export const useAuth = () => {
+    let context = useContext( AuthContext );
+    if ( context === undefined ) {
+        throw new Error("useAuth must be used within a AuthProvider")
+    }
+    return context
+}
+
 
 export function AuthProvider ({ children } : { children: ReactNode }) {
     const value: AuthSession = useProvider();
