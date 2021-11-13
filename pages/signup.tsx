@@ -20,7 +20,7 @@ import * as Yup from "yup";
 import PasswordInput from "components/PasswordInput";
 import RouterLink from "components/RouterLink";
 import { supabase } from "lib/supabaseClient";
-
+import AuthFormContainer from "components/AuthFormContainer";
 
 type AuthUserForm = {
     email: string,
@@ -62,41 +62,8 @@ function Signup() {
     };
 
     return (
-        <Center 
-            my="20"
-            h={{ lg:"50vh" }}
-        >
-            <VStack
-                borderWidth={2}
-                borderColor="cyan"
-                borderRadius="4px"
-                h="min-content"
-                w={{
-                    sm: "full",
-                    md: "50%",
-                    lg: "40%"
-                }}
-                position="relative"
-                p={10}
-                pt={14}
-            >
-                <Center
-                    position="absolute"
-                    top="-10"
-                    w="3xs"
-                    h="fit-content"
-                    borderWidth={2}
-                    borderColor="cyan"
-                    borderRadius="4px"
-                    bg="navy.400"
-                    p={2}
-                >
-                    <Text
-                        as="span"
-                        fontWeight="600"
-                        fontSize="4xl"
-                    >Signup</Text>
-                </Center>
+        <AuthFormContainer title="Signup">
+
                 <Formik
                     initialValues={initialValues}
                     validationSchema={SignupSchema}
@@ -152,8 +119,7 @@ function Signup() {
                         </Form>
                     )}
                 </Formik>
-            </VStack>
-        </Center>
+            </AuthFormContainer>
     )
 }
 
