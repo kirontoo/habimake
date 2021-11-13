@@ -17,8 +17,8 @@ import * as Yup from "yup";
 import PasswordInput from "components/PasswordInput";
 import RouterLink from "components/RouterLink";
 import AuthFormContainer from "components/AuthFormContainer";
-import { supabase } from "lib/supabaseClient";
 import { useRouter } from "next/router";
+import { useAuth } from "components/Auth";
 
 type AuthUserForm = {
     email: string,
@@ -29,10 +29,12 @@ type AuthUserForm = {
 
 function Login() {
     const router = useRouter();
+    const auth = useAuth();
+
     let initialValues: AuthUserForm = {
         email: "",
         password: "",
-    }
+    };
 
     const LoginSchema: Yup.SchemaOf<{email: string, password: string}> = Yup.object().shape({
         email: Yup.string()
@@ -48,10 +50,7 @@ function Login() {
 
     let onSubmit = async (values: AuthUserForm, actions: FormikHelpers<AuthUserForm> ) => {
         try {
-            const { user, session, error } = await supabase.auth.signIn({
-                email: values.email,
-                password: values.password,
-            });
+            auth.signIn({ email: values.email, password: values.password });
             router.push('/');
         } catch(err) {
             actions.setErrors({email: "Invalid email or password", password: "Invalid email or password"})
