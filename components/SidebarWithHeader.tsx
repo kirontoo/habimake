@@ -17,7 +17,7 @@ import { useRouter } from "next/router";
 
 const LinkItems: Array<LinkItemProps> = [
     { name: "Home", href: "/"},
-    { name: "Account", href: "placeholder" },
+    { name: "Account", href: "account" },
     { name: "My Habits", href: "placeholder"},
 ];
 
