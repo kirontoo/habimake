@@ -36,12 +36,12 @@ function useProvider(): AuthSession {
     useEffect(() => {
         const session = supabase.auth.session()
         setSession(session)
-        setUser(session.user)
+        setUser(session?.user)
 
         const { data: authListener } = supabase.auth.onAuthStateChange(
             async (_, session) => {
                 setSession(session)
-                setUser(session.user ?? null)
+                setUser(session?.user ?? null)
             }
         )
 
