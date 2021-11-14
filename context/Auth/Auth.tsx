@@ -13,7 +13,7 @@ interface AuthSession {
     session: Session | null,
     isAuth: boolean,
     signIn: (_: UserCredentials) => Promise<void>,
-    signUp: (_: UserCredentials) => void,
+    signUp: (_: UserCredentials) => Promise<void>,
     signOut: () => void,
 }
 
@@ -72,35 +72,40 @@ function useProvider(): AuthSession {
             // successful login
             setState(response.session);
             return resolve();
-        })
+        });
     }
 
     async function signOut() {
         return await supabase.auth.signOut();
     }
 
-    async function signUp(u: UserCredentials & { username: string }) {
-        let  { email, password, username } = u;
-        // signup with a session
-        const response = await supabase.auth.signUp({
-            email,
-            password
+    async function signUp(u: UserCredentials & { username: string }): Promise<void> {
+        return new Promise( async function(resolve, reject) {
+            let  { email, password, username } = u;
+            // signup with a session
+            const response = await supabase.auth.signUp({
+                email,
+                password
+            });
+
+            if ( response.error ) {
+                return reject(response.error);
+            }
+
+            // successful signup
+            setState(response.session);
+
+            // TODO: create user profile
+            // try {
+            //     const host = window.location.origin;
+            //     let res = await fetch(host + '/api/user');
+            //     console.log(res)
+            // } catch(err) {
+
+            // }
+            //
+            return resolve();
         });
-
-        if ( response.error ) {
-            throw new Error(response.error.message);
-        }
-
-        setSession(response.session);
-
-        // TODO: create user profile
-        // try {
-        //     const host = window.location.origin;
-        //     let res = await fetch(host + '/api/user');
-        //     console.log(res)
-        // } catch(err) {
-
-        // }
     }
 
     return { user, session, isAuth, signIn, signOut, signUp };
