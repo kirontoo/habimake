@@ -11,6 +11,7 @@ import { supabase } from "lib/supabaseClient";
 interface AuthSession {
     user: User | null,
     session: Session | null,
+    isAuth: boolean,
     signIn: (_: UserCredentials) => Promise<void>,
     signUp: (_: UserCredentials) => void,
     signOut: () => void,
@@ -19,6 +20,7 @@ interface AuthSession {
 const currSession: AuthSession  = {
     user: null,
     session: null,
+    isAuth: false,
     signIn: (_: UserCredentials) => null,
     signUp: (_: UserCredentials) => null,
     signOut: () => null,
@@ -32,16 +34,16 @@ interface UserCredentials {
 function useProvider(): AuthSession {
     let [user, setUser] = useState<User | null>(null);
     let [session, setSession] = useState<Session | null>(null);
+    let [isAuth, setIsAuth ] = useState<boolean>(false);
 
     useEffect(() => {
-        const session = supabase.auth.session()
-        setSession(session)
-        setUser(session?.user)
+        // NOTE: s is the session data value
+        const s = supabase.auth.session()
+        setState(s);
 
         const { data: authListener } = supabase.auth.onAuthStateChange(
-            async (_, session) => {
-                setSession(session)
-                setUser(session?.user ?? null)
+            async (_, s) => {
+                setState(s);
             }
         )
 
@@ -49,6 +51,12 @@ function useProvider(): AuthSession {
             authListener?.unsubscribe()
         }
     }, []);
+
+    function setState(s: Session) {
+        setSession(s);
+        setUser(s?.user ?? null);
+        setIsAuth(s !== null && s?.user !== null);
+    }
 
     function signIn(u: UserCredentials): Promise<void> {
         return new Promise( async function(resolve, reject) {
@@ -62,8 +70,7 @@ function useProvider(): AuthSession {
             }
 
             // successful login
-            setUser(response.user);
-            setSession(response.session);
+            setState(response.session);
             return resolve();
         })
     }
@@ -84,7 +91,6 @@ function useProvider(): AuthSession {
             throw new Error(response.error.message);
         }
 
-        setUser(response.user);
         setSession(response.session);
 
         // TODO: create user profile
@@ -97,7 +103,7 @@ function useProvider(): AuthSession {
         // }
     }
 
-    return { user, session, signIn, signOut, signUp };
+    return { user, session, isAuth, signIn, signOut, signUp };
 }
 
 // Creates a lifecycle based on initailValues
