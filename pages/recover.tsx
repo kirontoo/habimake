@@ -18,6 +18,7 @@ import AuthFormContainer from "components/AuthFormContainer";
 import * as Yup from "yup";
 import { supabase } from "lib/supabaseClient";
 import { useRouter } from "next/router";
+import { AuthSchema } from "lib/Schema";
 
 type RecoverForm = {
     email: string
@@ -30,9 +31,7 @@ function RecoverAccount() {
     }
 
     const RecoverSchema: Yup.SchemaOf<RecoverForm> = Yup.object().shape({
-        email: Yup.string()
-            .email('Invalid email')
-            .required('Required'),
+        email: AuthSchema.Email
     });
 
     let onSubmit = async( 
@@ -41,6 +40,8 @@ function RecoverAccount() {
     ) => {
         try {
             await supabase.auth.api.resetPasswordForEmail(values.email)
+
+            // TODO: show recovered email screen
         }catch(err) {
             actions.setSubmitting(false);
             router.push('/')
