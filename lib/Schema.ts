@@ -13,11 +13,4 @@ export module AuthSchema {
         .required('Required');
 
     export const Username = Yup.string().min(4).max(30);
-
-    // export type AuthUserForm = {
-    //     email: string,
-    //     password: string,
-    //     username?: string,
-    //     verifyPassword?: string
-    // };
 }
