@@ -19,12 +19,11 @@ import RouterLink from "components/RouterLink";
 import AuthFormContainer from "components/AuthFormContainer";
 import { useRouter } from "next/router";
 import { useAuth } from "context/Auth";
+import { AuthSchema } from "lib/Schema";
 
 type AuthUserForm = {
     email: string,
-    password: string,
-    username?: string,
-    verifyPassword?: string
+    password: string
 };
 
 function Login() {
@@ -36,16 +35,9 @@ function Login() {
         password: "",
     };
 
-    const LoginSchema: Yup.SchemaOf<{email: string, password: string}> = Yup.object().shape({
-        email: Yup.string()
-            .email('Invalid email')
-            .required('Required'),
+    const LoginSchema: Yup.SchemaOf<AuthUserForm> = Yup.object().shape({
+        email: AuthSchema.Email,
         password: Yup.string()
-            .required('Required')
-            .matches(
-                /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
-                "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
-            )
     });
 
     let onSubmit = async (values: AuthUserForm, actions: FormikHelpers<AuthUserForm> ) => {
