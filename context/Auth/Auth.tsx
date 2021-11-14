@@ -11,7 +11,7 @@ import { supabase } from "lib/supabaseClient";
 interface AuthSession {
     user: User | null,
     session: Session | null,
-    signIn: (_: UserCredentials) => void,
+    signIn: (_: UserCredentials) => Promise<void>,
     signUp: (_: UserCredentials) => void,
     signOut: () => void,
 }
@@ -50,31 +50,51 @@ function useProvider(): AuthSession {
         }
     }, []);
 
-    async function signIn(u: UserCredentials) {
-        const response = await supabase.auth.signIn({
-            email: u.email,
-            password: u.password,
-        });
-        setUser(response.user);
-        setSession(response.session);
+    function signIn(u: UserCredentials): Promise<void> {
+        return new Promise( async function(resolve, reject) {
+            const response = await supabase.auth.signIn({
+                email: u.email,
+                password: u.password
+            });
 
-        if ( response.error ) {
-            throw response.error;
-        }
+            if ( response.error ) {
+                return reject(response.error);
+            }
+
+            // successful login
+            setUser(response.user);
+            setSession(response.session);
+            return resolve();
+        })
     }
 
     async function signOut() {
         return await supabase.auth.signOut();
     }
 
-    async function signUp(u: UserCredentials) {
-        const response = await supabase.auth.signUp(u);
+    async function signUp(u: UserCredentials & { username: string }) {
+        let  { email, password, username } = u;
+        // signup with a session
+        const response = await supabase.auth.signUp({
+            email,
+            password
+        });
+
+        if ( response.error ) {
+            throw new Error(response.error.message);
+        }
+
         setUser(response.user);
         setSession(response.session);
 
-        if ( response.error ) {
-            throw response.error;
-        }
+        // TODO: create user profile
+        // try {
+        //     const host = window.location.origin;
+        //     let res = await fetch(host + '/api/user');
+        //     console.log(res)
+        // } catch(err) {
+
+        // }
     }
 
     return { user, session, signIn, signOut, signUp };
