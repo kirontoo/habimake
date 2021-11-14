@@ -14,6 +14,7 @@ import NavBar from "components/NavBar";
 import NavItem from "components/NavItem";
 import RouterLink from "components/RouterLink";
 import { useRouter } from "next/router";
+import { useAuth } from 'context/Auth';
 
 const LinkItems: Array<LinkItemProps> = [
     { name: "Home", href: "/"},
@@ -26,13 +27,46 @@ interface LinkItemProps {
     href: string;
 }
 
-function SidebarWithHeader({
-    children,
-}: {
-    children: ReactNode;
-}) {
-    const { isOpen, onOpen, onClose } = useDisclosure();
+interface AuthBtnProps {
+    onClick: () => void
+};
+
+function AuthButtons({ onClick }: AuthBtnProps ) {
+    const auth = useAuth();
     const router = useRouter();
+    if (auth.isAuth) {
+        return (
+            <Button
+                fontSize="2xl"
+                size="lg"
+                onClick={ async () => {
+                    try {
+                        onClick();
+                        await auth.signOut();
+                        router.push('/');
+                    } catch(err) {
+                    }
+                }}
+            >Logout</Button>
+        ) 
+    } else {
+        return (
+
+            <Button
+                fontSize="2xl"
+                size="lg"
+                onClick={() => {
+                    onClick();
+                    router.push("/login");
+                }}
+            >Login</Button>
+        ) 
+    }
+}
+
+function SidebarWithHeader({ children }: { children: ReactNode; }) {
+    const { isOpen, onOpen, onClose } = useDisclosure();
+
     return (
         <Box minH="100vh">
             <Drawer
@@ -73,15 +107,7 @@ function SidebarWithHeader({
                             borderTopColor="cyan.tint"
                             alignItems="flex-start"
                         >
-                            <Button
-                                href="login" 
-                                fontSize="2xl"
-                                size="lg"
-                                onClick={() => {
-                                    router.push("/login");
-                                    onClose();
-                                }}
-                            >Login</Button>
+                           <AuthButtons onClick={onClose}/> 
                         </VStack>
                     </SidebarContent>
                 </DrawerContent>
