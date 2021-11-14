@@ -14,7 +14,7 @@ interface AuthSession {
     isAuth: boolean,
     signIn: (_: UserCredentials) => Promise<void>,
     signUp: (_: UserCredentials) => Promise<void>,
-    signOut: () => void,
+    signOut: () => Promise<void>,
 }
 
 const currSession: AuthSession  = {
@@ -75,8 +75,16 @@ function useProvider(): AuthSession {
         });
     }
 
-    async function signOut() {
-        return await supabase.auth.signOut();
+    async function signOut(): Promise<void> {
+        return new Promise( async function(resolve, reject) {
+            let { error } = await supabase.auth.signOut();
+            if ( error ) { 
+                return reject(error);
+            }
+
+            setState(null)
+            return resolve();
+        })
     }
 
     async function signUp(u: UserCredentials & { username: string }): Promise<void> {
