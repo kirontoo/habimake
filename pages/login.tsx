@@ -20,6 +20,7 @@ import AuthFormContainer from "components/AuthFormContainer";
 import { useRouter } from "next/router";
 import { useAuth } from "context/Auth";
 import { AuthSchema } from "lib/Schema";
+import { useEffect } from "react";
 
 type AuthUserForm = {
     email: string,
@@ -35,6 +36,12 @@ function Login() {
         password: "",
     };
 
+    useEffect(() => {
+        if ( auth.isAuth ) {
+            router.push('/');
+        }
+    }, []);
+
     const LoginSchema: Yup.SchemaOf<AuthUserForm> = Yup.object().shape({
         email: AuthSchema.Email,
         password: Yup.string()
@@ -42,7 +49,7 @@ function Login() {
 
     let onSubmit = async (values: AuthUserForm, actions: FormikHelpers<AuthUserForm> ) => {
         try {
-            auth.signIn({ email: values.email, password: values.password });
+            await auth.signIn({ email: values.email, password: values.password });
             router.push('/');
         } catch(err) {
             actions.setErrors({email: "Invalid email or password", password: "Invalid email or password"})
