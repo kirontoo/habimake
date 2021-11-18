@@ -42,7 +42,7 @@ function Signup() {
 
     let onSubmit = async (values: AuthUserForm, actions: FormikHelpers<AuthUserForm> ) => {
         try {
-            auth.signUp({ email: values.email, password: values.password })
+            await auth.signUp({ email: values.email, password: values.password });
 
             // TODO: redirect / show confirm email page
         } catch(err) {
