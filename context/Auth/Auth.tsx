@@ -103,15 +103,14 @@ function useProvider(): AuthSession {
             // successful signup
             setState(response.session);
 
-            // TODO: create user profile
-            // try {
-            //     const host = window.location.origin;
-            //     let res = await fetch(host + '/api/user');
-            //     console.log(res)
-            // } catch(err) {
+            await fetch('/api/user', {
+                method: 'POST',
+                body: JSON.stringify({
+                    id: response.session.user.id,
+                    username
+                })
+            });
 
-            // }
-            //
             return resolve();
         });
     }
