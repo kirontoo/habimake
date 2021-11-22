@@ -40,7 +40,7 @@ function Login() {
         if ( auth.isAuth ) {
             router.push('/');
         }
-    }, []);
+    }, [auth]);
 
     const LoginSchema: Yup.SchemaOf<AuthUserForm> = Yup.object().shape({
         email: AuthSchema.Email,

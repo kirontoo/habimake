@@ -20,6 +20,7 @@ import AuthFormContainer from "components/AuthFormContainer";
 import { AuthSchema } from "lib/Schema";
 import { useAuth } from "context/Auth";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 type AuthUserForm = {
     email: string,
@@ -30,6 +31,7 @@ type AuthUserForm = {
 function Signup() {
     const auth = useAuth();
     const router = useRouter();
+
     let initialValues: AuthUserForm = {
         username: "",
         email: "",
@@ -41,6 +43,12 @@ function Signup() {
         password: AuthSchema.Password,
         username: AuthSchema.Username
     });
+
+    useEffect(() => {
+        if ( auth.isAuth ) {
+            router.push("/");
+        }
+    }, [auth]);
 
     let onSubmit = async (values: AuthUserForm, actions: FormikHelpers<AuthUserForm> ) => {
         try {
