@@ -13,7 +13,7 @@ interface AuthSession {
     session: Session | null,
     isAuth: boolean,
     signIn: (_: UserCredentials) => Promise<void>,
-    signUp: (_: UserCredentials) => Promise<void>,
+    signUp: (_: UserCredentials & { username: string }) => Promise<void>,
     signOut: () => Promise<void>,
 }
 
@@ -24,12 +24,12 @@ const currSession: AuthSession  = {
     signIn: (_: UserCredentials) => null,
     signUp: (_: UserCredentials) => null,
     signOut: () => null,
-}
+};
 
 interface UserCredentials {
-    email: string,
-    password: string
-}
+    email: string;
+    password: string;
+}; 
 
 function useProvider(): AuthSession {
     let [user, setUser] = useState<User | null>(null);
@@ -91,24 +91,34 @@ function useProvider(): AuthSession {
         return new Promise( async function(resolve, reject) {
             let  { email, password, username } = u;
             // signup with a session
-            const response = await supabase.auth.signUp({
-                email,
-                password
+             const response = await supabase.auth.signUp({
+                 email,
+                 password
+             });
+
+             if ( response.error ) {
+                 return reject(response.error);
+             }
+
+             // successful signup
+             setState(response.session);
+             await fetch('/api/user', {
+                 method: 'POST',
+                 body: JSON.stringify({
+                     id: response.session.user.id,
+                     username
+                 })
+             });
+
+            let profile = JSON.stringify({
+                username: username,
+                id: response.session.user.id,
             });
-
-            if ( response.error ) {
-                return reject(response.error);
-            }
-
-            // successful signup
-            setState(response.session);
 
             await fetch('/api/user', {
                 method: 'POST',
-                body: JSON.stringify({
-                    id: response.session.user.id,
-                    username
-                })
+                headers: { "Content-Type": "application/json" },
+                body: profile
             });
 
             return resolve();

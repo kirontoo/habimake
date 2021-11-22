@@ -18,7 +18,7 @@ async function CreateUser(req: NextApiRequest, res: NextApiResponse) {
     try {
         const { id, username } = req.body;
 
-        if ( !username ) {
+        if ( username === undefined || username == '' || username === null ) {
             throw new Error('missing username');
         }
 
