@@ -19,6 +19,7 @@ import RouterLink from "components/RouterLink";
 import AuthFormContainer from "components/AuthFormContainer";
 import { AuthSchema } from "lib/Schema";
 import { useAuth } from "context/Auth";
+import { useRouter } from "next/router";
 
 type AuthUserForm = {
     email: string,
@@ -28,6 +29,7 @@ type AuthUserForm = {
 
 function Signup() {
     const auth = useAuth();
+    const router = useRouter();
     let initialValues: AuthUserForm = {
         username: "",
         email: "",
@@ -42,9 +44,13 @@ function Signup() {
 
     let onSubmit = async (values: AuthUserForm, actions: FormikHelpers<AuthUserForm> ) => {
         try {
-            await auth.signUp({ email: values.email, password: values.password });
+            await auth.signUp({ 
+                email: values.email, 
+                password: values.password,
+                username: values.username,
+            });
 
-            // TODO: redirect / show confirm email page
+            router.push("/");
         } catch(err) {
             actions.setErrors({email: "Invalid email or password", password: "Invalid email or password"})
             actions.setSubmitting(false);
