@@ -110,14 +110,19 @@ function RecoverAccount() {
                 )}
             </Formik>
 
-            <Modal isOpen={isOpen} onClose={onClose} isCentered>
+            <Modal 
+                isOpen={isOpen} 
+                onClose={onClose} 
+                isCentered
+                size="lg"
+            >
                 <ModalOverlay />
                 <ModalContent>
                     <ModalHeader>Recovery Email</ModalHeader>
-                    <ModalCloseButton></ModalCloseButton>
+                    <ModalCloseButton />
                     <ModalBody><span>Check your email for the recovery link.</span></ModalBody>
                     <ModalFooter>
-                        <Button onClick={onClose}>Close</Button>
+                        <Button size="lg" w="30%" onClick={onClose}>Close</Button>
                     </ModalFooter>
                 </ModalContent>
             </Modal>
