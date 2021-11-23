@@ -60,7 +60,11 @@ function Signup() {
 
             router.push("/");
         } catch(err) {
-            actions.setErrors({email: "Invalid email or password", password: "Invalid email or password"})
+            if ( err == "Email is already in use") {
+                actions.setErrors({ email: err });
+            } else {
+                actions.setErrors({email: "Invalid email or password", password: "Invalid email or password"})
+            }
             actions.setSubmitting(false);
         }
     };

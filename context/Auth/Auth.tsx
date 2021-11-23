@@ -96,8 +96,15 @@ function useProvider(): AuthSession {
                  password
              });
 
+             console.log(response)
+
              if ( response.error ) {
                  return reject(response.error);
+             }
+
+             if ( response.session === null ) {
+                // user already exists
+                return reject("Email is already in use");
              }
 
              // successful signup
@@ -105,14 +112,18 @@ function useProvider(): AuthSession {
 
             let profile = JSON.stringify({
                 username: username,
-                id: response.session.user.id,
+                id: response.session?.user.id ?? response.user.id,
             });
 
-            await fetch('/api/user', {
+            const userRes = await fetch('/api/user', {
                 method: 'POST',
                 headers: { "Content-Type": "application/json" },
                 body: profile
             });
+
+            if (!userRes.ok) {
+                return reject(response.error)
+            }
 
             return resolve();
         });

@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import prisma from "lib/prisma";
-import { Prisma } from "@prisma/client";
+import { Prisma, User } from "@prisma/client";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { method } = req;
@@ -17,6 +17,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 async function CreateUser(req: NextApiRequest, res: NextApiResponse) {
     try {
         const { id, username } = req.body;
+
+        // Check if the this user already exists
+        const currUser = await prisma.user.findUnique({ 
+            where: {
+                username
+            }
+        });
+
+        if ( currUser ) {
+            return res.status(200).json(currUser);
+        }
 
         if ( username === undefined || username == '' || username === null ) {
             throw new Error('missing username');
