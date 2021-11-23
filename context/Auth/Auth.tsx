@@ -102,13 +102,6 @@ function useProvider(): AuthSession {
 
              // successful signup
              setState(response.session);
-             await fetch('/api/user', {
-                 method: 'POST',
-                 body: JSON.stringify({
-                     id: response.session.user.id,
-                     username
-                 })
-             });
 
             let profile = JSON.stringify({
                 username: username,
