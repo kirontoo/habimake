@@ -19,7 +19,7 @@ import { useAuth } from 'context/Auth';
 const LinkItems: Array<LinkItemProps> = [
     { name: "Home", href: "/"},
     { name: "Account", href: "account" },
-    { name: "My Habits", href: "placeholder"},
+    { name: "My Habits", href: "habits"},
 ];
 
 interface LinkItemProps {
