@@ -3,7 +3,7 @@ import prisma from "lib/prisma";
 import { Prisma } from "@prisma/client";
 
 async function userHandler (
-    req: NextApiRequest, 
+    req: NextApiRequest,
     res: NextApiResponse
 ) {
     const { method } = req;
@@ -12,7 +12,7 @@ async function userHandler (
         case 'GET':
             return await GetUser(req, res);
         default:
-        res.setHeader('Allow', ['GET', 'PUT']);
+        res.setHeader('Allow', ['GET']);
         res.status(405).end('Method ${method} Not Allowed')
     }
 }
