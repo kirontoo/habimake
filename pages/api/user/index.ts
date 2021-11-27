@@ -9,7 +9,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         case 'POST':
             return CreateUser(req, res);
         default:
-        res.setHeader('Allow', ['GET', 'PUT']);
+        res.setHeader('Allow', ['POST']);
         res.status(405).end('Method ${method} Not Allowed')
     }
 }
@@ -19,7 +19,7 @@ async function CreateUser(req: NextApiRequest, res: NextApiResponse) {
         const { id, username } = req.body;
 
         // Check if the this user already exists
-        const currUser = await prisma.user.findUnique({ 
+        const currUser = await prisma.user.findUnique({
             where: {
                 username
             }
@@ -35,7 +35,7 @@ async function CreateUser(req: NextApiRequest, res: NextApiResponse) {
 
         let user: Prisma.UserCreateInput = { id, username };
 
-        let data = await prisma.user.create({ data: user });
+        let data: User = await prisma.user.create({ data: user });
         return res.status(200).json(data);
     } catch(error) {
         return res.status(500).json({
