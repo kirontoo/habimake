@@ -1,6 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import prisma from "lib/prisma";
 import { Prisma, Habit } from "@prisma/client";
+import { supabase } from "lib/supabaseClient";
+import { access } from "fs";
 
 async function habitHandler (
     req: NextApiRequest,
@@ -24,10 +26,28 @@ async function GetHabits(
     res: NextApiResponse
 ) {
     try {
-        let userId = req.headers["x-habimake-auth"] || req.body.userId;
-        let habits: Habit[] = await prisma.habit.findMany({
-            where: { userId: String(userId) }
-        });
+        let accessToken: string = String(req.headers["x-supabase-auth"]) || null;
+
+        const userId = req.body.userId;
+        if ( userId === null ) {
+            return res.status(401).send("Unauthorized");
+        }
+
+        // TODO: jwt decode token to get user values
+
+        // let habits: Habit[] = await prisma.habit.findMany({
+        //     where: { userId: String(userId) }
+        // });
+        supabase.auth.setAuth(accessToken);
+
+        const { data: habits, error} = await supabase
+            .from("Habit")
+            .select("*")
+            .eq("userId", userId)
+
+        if (error) {
+            return res.status(400).send("Bad Request");
+        }
 
        return res.status(200).json({
            habits
@@ -46,12 +66,27 @@ async function CreateHabit(
     try {
         let { userId, ...habitData} = req.body;
 
-        const data: Prisma.HabitCreateInput = { userId, ...habitData};
-        const habit: Habit = await prisma.habit.create({ data });
+        const data: Prisma.HabitCreateInput = {
+            userId,
+            ...habitData,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+        };
 
-        return res.status(200).json({
-            habit
-        });
+        // TODO: put into middleware?
+        const accessToken = req.headers['x-supabase-auth'] || null;
+        supabase.auth.setAuth(String(accessToken));
+
+        // This client will now send requests as this user
+        const { data: habit, error } = await supabase
+            .from("Habit")
+            .insert([{...data}]);
+
+        if (error) {
+            return res.status(401).send('Unauthorized');
+        }
+
+        return res.status(200).json(habit);
     } catch (error) {
         return res.status(500).send({
             error: error.message
