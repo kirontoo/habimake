@@ -2,7 +2,6 @@ import type { NextApiRequest, NextApiResponse } from "next"
 import prisma from "lib/prisma";
 import { Prisma, Habit } from "@prisma/client";
 import { supabase } from "lib/supabaseClient";
-import { access } from "fs";
 
 async function habitHandler (
     req: NextApiRequest,
