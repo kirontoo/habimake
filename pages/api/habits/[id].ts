@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import prisma from "lib/prisma";
-import { Prisma, Habit } from "@prisma/client";
 import { supabase } from "lib/supabaseClient";
+import apiHandler from "lib/helpers/apiHandler";
 
 async function habitHandler (
     req: NextApiRequest,
@@ -26,25 +25,22 @@ async function GetHabitById(
     res: NextApiResponse
 ) {
     try {
+
+        let token = req.headers.authorization.split(" ")[1];
+        supabase.auth.setAuth(token);
+
         const habitId = req.query.id;
-        let userId = req.headers["x-habimake-auth"] || req.body.userId;
 
-        // verify user exists
-        let user = await prisma.user.findUnique({
-            where: { id: String(userId) }
-        });
+        const { data: habit, error } = await supabase
+            .from("Habit")
+            .select()
+            .eq("id", habitId)
 
-        if ( !user ) {
-            return res.status(403).send({
-                error: "Forbidden"
-            });
+        if (error) {
+            return res.status(401).json({ message: 'Invalid Token' });
         }
 
-        let data = await prisma.user.findUnique({
-            where: { id: String(habitId) }
-        });
-
-        return res.status(200).json(data);
+        return res.status(200).json(habit);
     } catch (error) {
         return res.status(500).send({
             error: error.message
@@ -57,35 +53,20 @@ async function UpdateHabit(
     res: NextApiResponse
 ) {
     try {
+        let token = req.headers.authorization.split(" ")[1];
+        supabase.auth.setAuth(token);
+
         const habitId = req.query.id;
-        let userId = req.headers["x-habimake-auth"] || req.body.userId;
+        const { data: habit, error } = await supabase
+            .from("Habit")
+            .update({...req.body})
+            .eq("id", habitId);
 
-        if ( !userId ) {
-            return res.status(403).send("forbidden");
+        if (error) {
+            throw error;
         }
 
-        // verify user exists
-        let user = await prisma.user.findUnique({
-            where: { id: String(userId) }
-        });
-
-        if ( !user ) {
-            return res.status(403).send({
-                error: "Forbidden"
-            });
-        }
-
-        const { name, description } = req.body;
-
-        let habit: Habit = await prisma.habit.update({
-            where: { id: Number.parseInt(String(habitId)) },
-            data: {
-                name,
-                description
-            }
-        });
-
-        return res.status(200).json(habit);
+        return res.status(200).json({habit, error});
     } catch (error) {
         return res.status(500).send({
             error: error.message
@@ -98,14 +79,10 @@ async function DeleteHabit(
     res: NextApiResponse
 ) {
     try {
-        const habitId = req.query.id || null;
+        const habitId = req.query.id;
 
-        if ( !habitId ) {
-            throw new Error("missing habit id");
-        }
-
-        const accessToken = req.headers['x-supabase-auth'] || null;
-        supabase.auth.setAuth(String(accessToken));
+        let token = req.headers.authorization.split(" ")[1];
+        supabase.auth.setAuth(token);
 
         // check if owner before deleting
         const { data, error } = await supabase.from("Habit")
@@ -124,4 +101,4 @@ async function DeleteHabit(
     }
 }
 
-export default habitHandler;
+export default apiHandler(habitHandler);
