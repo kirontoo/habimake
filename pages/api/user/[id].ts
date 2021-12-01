@@ -1,6 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import prisma from "lib/prisma";
 import { Prisma } from "@prisma/client";
+import { supabase } from "lib/supabaseClient";
+import apiHandler from "lib/helpers/apiHandler";
 
 async function userHandler (
     req: NextApiRequest,
@@ -22,10 +24,16 @@ async function GetUser(
     res: NextApiResponse
 ) {
     try {
+        let token = req.headers.authorization.split(" ")[1];
+        supabase.auth.setAuth(token);
+
         const id = req.query.id;
-        let data = await prisma.user.findUnique({
-            where: { id: String(id) }
-        });
+        let { data, error } = await supabase
+            .from("User")
+            .select()
+            .eq("id", id)
+            .single()
+
         return res.status(200).json(data);
     } catch(error) {
         return res.status(500).send({
@@ -34,4 +42,4 @@ async function GetUser(
     }
 }
 
-export default userHandler;
+export default apiHandler(userHandler);
