@@ -17,28 +17,25 @@ async function userHandler (
         res.setHeader('Allow', ['GET']);
         res.status(405).end('Method ${method} Not Allowed')
     }
-}
 
-async function GetUser(
-    req: NextApiRequest,
-    res: NextApiResponse
-) {
-    try {
-        let token = req.headers.authorization.split(" ")[1];
-        supabase.auth.setAuth(token);
+    async function GetUser( req: NextApiRequest, res: NextApiResponse ) {
+        try {
+            let token = req.headers.authorization.split(" ")[1];
+            supabase.auth.setAuth(token);
 
-        const id = req.query.id;
-        let { data, error } = await supabase
-            .from("User")
-            .select()
-            .eq("id", id)
-            .single()
+            const id = req.query.id;
+            let { data, error } = await supabase
+                .from("User")
+                .select()
+                .eq("id", id)
+                .single()
 
-        return res.status(200).json(data);
-    } catch(error) {
-        return res.status(500).send({
-            error: error.message
-        });
+            return res.status(200).json(data);
+        } catch(error) {
+            return res.status(500).send({
+                error: error.message
+            });
+        }
     }
 }
 
