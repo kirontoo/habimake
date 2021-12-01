@@ -35,6 +35,7 @@ async function GetHabitById(
             .from("Habit")
             .select()
             .eq("id", habitId)
+            .single();
 
         if (error) {
             return res.status(401).json({ message: 'Invalid Token' });
