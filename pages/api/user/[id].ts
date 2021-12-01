@@ -30,6 +30,10 @@ async function userHandler (
                 .eq("id", id)
                 .single()
 
+            if (error) {
+                throw error;
+            }
+
             return res.status(200).json(data);
         } catch(error) {
             return res.status(500).send({
