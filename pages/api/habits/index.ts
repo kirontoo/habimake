@@ -56,7 +56,8 @@ async function habitHandler (
             // This client will now send requests as this user
             const { data: habit, error } = await supabase
                 .from("Habit")
-                .insert([{...data}]);
+                .insert([{...data}])
+                .single();
 
             if (error) {
                 return res.status(401).send('Unauthorized');
