@@ -33,6 +33,7 @@ async function habitHandler (
                 .from(TABLE)
                 .select()
                 .eq("id", habitId)
+                .limit(1)
                 .single();
 
             if (error) {
