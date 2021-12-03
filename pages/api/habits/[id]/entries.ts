@@ -1,9 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { Prisma } from "@prisma/client";
 import { supabase } from "lib/supabaseClient";
 import apiHandler from "lib/helpers/apiHandler";
 import parseToken from "lib/helpers/parseToken";
-import prisma from "lib/prisma";
 import { DateTime } from "luxon";
 
 async function handler( req: NextApiRequest, res: NextApiResponse) {
@@ -19,7 +17,7 @@ async function handler( req: NextApiRequest, res: NextApiResponse) {
         case 'POST':
             return await CreateHabitEntry(req, res);
         case 'DELETE':
-            return res.status(200).send("delet entry")
+            return await DeleteHabitEntry(req, res);
         default:
             res.setHeader('Allow', ['GET', 'POST', 'DELETE']);
             res.status(405).end(`Method ${method} Not Allowed`)
@@ -74,11 +72,31 @@ async function handler( req: NextApiRequest, res: NextApiResponse) {
         }
     }
 
-    async function DeleteHabitEntry( req: NextApiRequest, res, NextApiResponse ) {
+    async function DeleteHabitEntry( req: NextApiRequest, res: NextApiResponse ) {
        try {
-            // TODO: get today's date and compare it with today's habit entry?
             const habitId = req.query.id;
 
+            // NOTE: payload should include the date
+            const { createdAt } = req.body
+
+            let validDate = DateTime.fromISO(createdAt).invalid;
+            if (!createdAt || validDate) {
+                return res.status(400).end("Invalid Payload");
+            }
+
+            const { data: habitEntry, error } = await supabase
+                .from(TABLE)
+                .delete()
+                .eq("habitId", habitId)
+                .eq("createdAt", createdAt)
+                .limit(1)
+                .single()
+
+            if (error) {
+                throw error;
+            }
+
+            return res.status(200).json(habitEntry);
         } catch(error) {
             return res.status(500).send({
                 error: error.message
