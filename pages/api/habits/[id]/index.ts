@@ -77,9 +77,15 @@ async function habitHandler (
             const { data, error } = await supabase
                 .from(TABLE)
                 .delete()
-                .eq("id", Number.parseInt(String(habitId)));
+                .eq("id", Number.parseInt(String(habitId)))
+                .limit(1)
+                .single();
 
-            if ( error ) {
+            if (data === null) {
+                return res.status(200).end();
+            }
+
+            if (error) {
                 throw new Error(error.message);
             }
 
