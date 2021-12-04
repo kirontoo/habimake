@@ -92,7 +92,11 @@ async function handler( req: NextApiRequest, res: NextApiResponse) {
                 .limit(1)
                 .single()
 
-            if (error) {
+            if ( habitEntry === null ) {
+                return res.status(200).end();
+            }
+
+            if ( error ) {
                 throw error;
             }
 
