@@ -25,13 +25,27 @@ async function handler( req: NextApiRequest, res: NextApiResponse) {
 
     // TODO: get habit entries based on month using the query string
     
+
+    // TODO: check for owner
     async function CreateHabitEntry( req: NextApiRequest, res: NextApiResponse ) {
         try {
             const habitId = req.query.id;
             
             const now = DateTime.now();
             const yesterday = now.minus({day: 1}).toISO();
-            
+
+            const { data: habit } = await supabase
+                .from("Habit")
+                .select()
+                .eq("id", habitId)
+                .limit(1)
+                .single();
+
+            if (habit === null) {
+                // user is not the owner
+                return res.status(403).end("Not authorized")
+            }
+
             const { data: prevEntry } = await supabase
                 .from(TABLE)
                 .select()
@@ -76,6 +90,18 @@ async function handler( req: NextApiRequest, res: NextApiResponse) {
        try {
             const habitId = req.query.id;
 
+            const { data: habit } = await supabase
+                .from("Habit")
+                .select()
+                .eq("id", habitId)
+                .limit(1)
+                .single();
+
+            if (habit === null) {
+                // user is not the owner
+                return res.status(403).end("Not authorized")
+            }
+
             // NOTE: payload should include the date
             const { createdAt } = req.body
 
@@ -92,11 +118,11 @@ async function handler( req: NextApiRequest, res: NextApiResponse) {
                 .limit(1)
                 .single()
 
-            if ( habitEntry === null ) {
+            if (habitEntry === null) {
                 return res.status(200).end();
             }
 
-            if ( error ) {
+            if (error) {
                 throw error;
             }
 
