@@ -69,6 +69,7 @@ async function userHandler (
 
     async function DeleteUser( req: NextApiRequest, res: NextApiResponse ) {
         try {
+            // TODO: should also delete fomr USERS
             await supabase
                 .from(TABLE)
                 .delete()
@@ -76,6 +77,7 @@ async function userHandler (
                 .limit(1)
                 .single();
 
+            await supabase.auth.api.deleteUser(id.toString(), "authenticated");
             return res.status(200).end();
         } catch (error) {
             return res.status(500).send({
