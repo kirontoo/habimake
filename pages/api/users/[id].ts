@@ -9,7 +9,8 @@ async function userHandler (
 ) {
     const TABLE = "User";
     const { method } = req;
-    let token = parseToken(req.headers.authorization);
+    const id = req.query.id;
+    const token = parseToken(req.headers.authorization);
     supabase.auth.setAuth(token);
 
     switch (method) {
@@ -18,7 +19,7 @@ async function userHandler (
         case 'DELETE':
             return await DeleteUser(req, res);
         case 'PATCH':
-        return res.status(200).end();
+        return await UpdateUser(req, res);
         default:
             res.setHeader('Allow', ['GET', 'PATCH', 'DELETE']);
             res.status(405).end('Method ${method} Not Allowed')
@@ -26,12 +27,12 @@ async function userHandler (
 
     async function GetUser( req: NextApiRequest, res: NextApiResponse ) {
         try {
-            const id = req.query.id;
             let { data, error } = await supabase
                 .from(TABLE)
                 .select()
                 .eq("id", id)
-                .single()
+                .limit(1)
+                .single();
 
             if (error) {
                 throw error;
@@ -45,15 +46,35 @@ async function userHandler (
         }
     }
 
+    async function UpdateUser( req: NextApiRequest, res: NextApiResponse ) {
+        try {
+            let { data, error } = await supabase
+                .from(TABLE)
+                .update({...req.body})
+                .eq("id", id)
+                .limit(1)
+                .single();
+
+            if (error) {
+                return res.status(400).end("Invalid payload");
+            }
+
+            return res.status(200).json({ user: data })
+        } catch (error) {
+            return res.status(500).send({
+                error: error.message
+            });
+        }
+    }
+
     async function DeleteUser( req: NextApiRequest, res: NextApiResponse ) {
         try {
-            const id = req.query.id;
             await supabase
                 .from(TABLE)
                 .delete()
                 .eq("id", id)
                 .limit(1)
-                .single()
+                .single();
 
             return res.status(200).end();
         } catch (error) {
