@@ -58,10 +58,10 @@ async function habitHandler (
                 .eq("id", habitId);
 
             if (error) {
-                throw error;
+                return res.status(400).end("Invalid payload");
             }
 
-            return res.status(200).json({habit, error});
+            return res.status(200).json({habit});
         } catch (error) {
             return res.status(500).send({
                 error: error.message
@@ -81,13 +81,8 @@ async function habitHandler (
                 .single();
 
             if (error) {
-                throw new Error(error.message);
-            }
-
-            if (data === null) {
                 return res.status(200).end();
             }
-
 
             return res.status(200).json(data);
         } catch (error) {
