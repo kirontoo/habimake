@@ -73,7 +73,6 @@ async function habitHandler (
         try {
             const habitId = req.query.id;
 
-            // check if owner before deleting
             const { data, error } = await supabase
                 .from(TABLE)
                 .delete()
@@ -81,13 +80,14 @@ async function habitHandler (
                 .limit(1)
                 .single();
 
+            if (error) {
+                throw new Error(error.message);
+            }
+
             if (data === null) {
                 return res.status(200).end();
             }
 
-            if (error) {
-                throw new Error(error.message);
-            }
 
             return res.status(200).json(data);
         } catch (error) {
